@@ -12,33 +12,62 @@
             padding: 0;
         }
 
-        main {
-            height: 100vh;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 240px 1fr;
+        aside {
+            position: fixed;
+            padding: 18px 16px;
+            top: 32px;
+            left: 32px;
+            width: 240px;
+            border-radius: 2px;
+            background-color: #fff;
+            box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
+            z-index: 99;
+            font: 400 16px/1.5 Arial, sans-serif;
+        }
+
+        .clicks {
+            font-size: 32px;
+        }
+
+        .jsc {
+            font-weight: 600;
         }
 
         #regions_div {
             width: 100%;
-            height: 100%;
+            height: 100vh;
             overflow: hidden;
         }
     </style>
 </head>
 <body>
 
-    <main>
-        <aside>
-            <span class="clicks"><span class="jsc">??</span> clics</span>
-        </aside>
-        <div id="regions_div"></div>
-    </main>
+    <aside>
+        <span class="clicks"><span class="jsc">??</span> clics</span>
+
+        <ul class="referrers jsr"></ul>
+    </aside>
+
+    <div id="regions_div"></div>
 
     <script>
-    window.linkData = /*<*/{"clicks":30,"countries":{"FR":11,"undefined":5,"US":4},"browsers":{"other":5,"firefox":2,"chrome":5,"edge":1,"safari":1},"referrers":{"undefined":19},"platforms":{},"undefined":1,"FR":1}/*>*/;
+    window.linkData = /*<*/{"clicks":30,"countries":{"FR":11,"undefined":5,"US":4},"browsers":{"other":5,"firefox":2,"chrome":5,"edge":1,"safari":1},"referrers":{"undefined":19,"t.co":3,"l.instagram.com":7},"platforms":{},"undefined":1,"FR":1}/*>*/;
 
     document.querySelector('.jsc').innerText = linkData.clicks;
+
+    const referrers = Object.fromEntries(
+        Object.entries(linkData.referrers).sort(([,a],[,b]) => b-a)
+    );
+
+    let referrersList = ``;
+    let i = 0;
+    for (const [ref, clicks] of Object.entries(referrers)) {
+        if (ref == "undefined") continue;
+        referrersList += `<li title="${clicks} clics">${ref}</li>`;
+        if (i > 5) break;
+        i++;
+    }
+    document.querySelector('.jsr').innerHTML = referrersList;
     </script>
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -59,7 +88,10 @@
 
             var data = google.visualization.arrayToDataTable(rawData);
     
-            var options = {};
+            var options = {
+                // colorAxis: {colors: ['#00853f', 'black', '#e31b23']},
+                backgroundColor: '#eee',
+            };
     
             var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
     
