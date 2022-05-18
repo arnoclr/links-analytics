@@ -37,9 +37,9 @@
                 ['Country', 'Popularity'],
             ]
 
-            window.linkData.countries.forEach((clicks, code) => {
+            for (let [code, clicks] of Object.entries(window.linkData.countries)) {
                 rawData.push([code, clicks])
-            });
+            }
 
             var data = google.visualization.arrayToDataTable(rawData);
     
